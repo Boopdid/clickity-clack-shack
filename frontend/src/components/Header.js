@@ -10,7 +10,7 @@ const Header = () => {
         collapseOnSelect
       >
         <Container>
-          <Navbar.Brand href='/'>Let's play a game</Navbar.Brand>
+          <Navbar.Brand href='/'>Clickity Clack Shack</Navbar.Brand>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
