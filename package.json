@@ -1,0 +1,14 @@
+{
+  "name": "clickity-clack-shack",
+  "version": "1.0.0",
+  "description": "Tabletop and board game ecommerce application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "author": "Peter Vrutneski",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
