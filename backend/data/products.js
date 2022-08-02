@@ -1,6 +1,5 @@
 const products = [
   {
-    _id: '1',
     name: 'Sagrada',
     image: '/images/Sagrada-Board-Game.png',
     description:
@@ -13,7 +12,6 @@ const products = [
     numReviews: 1948,
   },
   {
-    _id: '2',
     name: 'Elder Sign',
     image: '/images/Elder-Sign-Board-Game.png',
     description:
@@ -26,7 +24,6 @@ const products = [
     numReviews: 953,
   },
   {
-    _id: '3',
     name: 'Roll for the Galaxy',
     image: '/images/Roll-for-the-Galaxy-Board-Game.png',
     description:
@@ -39,7 +36,6 @@ const products = [
     numReviews: 451,
   },
   {
-    _id: '4',
     name: 'Marvel Dice Masters: Avengers vs. X-Men',
     image: '/images/Marvel-Dice-Masters-Avengers-vs-Xmen.png',
     description:
@@ -52,7 +48,6 @@ const products = [
     numReviews: 78,
   },
   {
-    _id: '5',
     name: 'Machi Koro',
     image: '/images/Machi-Koro-Board-Game.png',
     description:
@@ -65,7 +60,6 @@ const products = [
     numReviews: 1858,
   },
   {
-    _id: '6',
     name: 'Pandemic: The Cure',
     image: '/images/Pandemic-The-Cure-Board-Game.png',
     description:
