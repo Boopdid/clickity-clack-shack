@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { application } from 'express';
 import dotenv from 'dotenv';
 import colors from 'colors';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
@@ -23,6 +23,10 @@ app.get('/', (req, res) => {
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
+
+app.get('/api/config/stripe', (req, res) =>
+  res.send(process.env.STRIPE_PUB_KEY)
+);
 
 app.use(notFound);
 app.use(errorHandler);
