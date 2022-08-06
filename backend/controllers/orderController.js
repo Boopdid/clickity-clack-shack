@@ -106,9 +106,18 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get user orders
+// @route   GET /api/orders/myorders
+// @access  Private
+const getUserOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user._id });
+  res.json(orders);
+});
+
 export {
   addOrderItems,
   getOrderById,
   updateOrderToPaid,
   createStripePaymentIntent,
+  getUserOrders,
 };
