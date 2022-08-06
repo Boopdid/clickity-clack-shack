@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
+import Stripe from 'stripe';
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -54,6 +55,32 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Create stripe payment intent
+// @route   POST /api/orders/:id/stripe/payment-intent
+// @access  Private
+const createStripePaymentIntent = asyncHandler(async (req, res) => {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  console.log('stripe', stripe);
+  // res.send({ clientSecret: 'test123' });
+  const order = await Order.findById(req.params.id);
+  if (order) {
+    let orderTotal = order.totalPrice;
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: parseInt(orderTotal * 100, 10),
+      currency: 'usd',
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+});
+
 // @desc    Update order to paid
 // @route   PUT /api/orders/:id/pay
 // @access  Private
@@ -67,7 +94,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
       id: req.body.id,
       status: req.body.status,
       update_time: req.body.update_time,
-      email_address: req.body.payer.email_address,
+      email_address: req.body.payer?.email_address,
     };
 
     const updatedOrder = await order.save();
@@ -79,4 +106,9 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrderItems, getOrderById, updateOrderToPaid };
+export {
+  addOrderItems,
+  getOrderById,
+  updateOrderToPaid,
+  createStripePaymentIntent,
+};

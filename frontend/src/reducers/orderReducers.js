@@ -6,6 +6,9 @@ import {
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_FAIL,
   ORDER_PAY_RESET,
+  ORDER_INTENT_REQUEST,
+  ORDER_INTENT_SUCCESS,
+  ORDER_INTENT_FAIL,
   ORDER_PAY_REQUEST,
   ORDER_PAY_SUCCESS,
   ORDER_PAY_FAIL,
@@ -49,6 +52,32 @@ export const orderDetailsReducer = (
         order: action.payload,
       };
     case ORDER_DETAILS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+export const orderPayIntentReducer = (
+  state = { loading: true, paymentIntent: {} },
+  action
+) => {
+  switch (action.type) {
+    case ORDER_INTENT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case ORDER_INTENT_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        paymentIntent: action.payload,
+      };
+    case ORDER_INTENT_FAIL:
       return {
         loading: false,
         error: action.payload,

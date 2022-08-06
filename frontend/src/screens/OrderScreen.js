@@ -1,14 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
-import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
+import {
+  Button,
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+  ListGroupItem,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getOrderDetails } from '../actions/orderActions';
+import { getOrderDetails, payOrder } from '../actions/orderActions';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const OrderScreen = (props) => {
+  let navigate = useNavigate();
+
   let params = useParams();
+
+  // Redirect info from making a payment
+  // Eventually would want to verify values more specifically
+  let [searchParams, setSearchParams] = useSearchParams();
+  let paymentIntent = searchParams.get('payment_intent');
+  let paymentSecret = searchParams.get('payment_intent_client_secret');
+  let redirectStatus = searchParams.get('redirect_status');
+
   const orderId = params.id;
 
   const dispatch = useDispatch();
@@ -33,12 +52,25 @@ const OrderScreen = (props) => {
   }
 
   useEffect(() => {
+    dispatch(getOrderDetails(orderId));
+    if (!order?.isPaid && paymentIntent && paymentSecret && redirectStatus) {
+      dispatch(
+        payOrder(orderId, {
+          id: paymentIntent,
+          status: redirectStatus,
+          update_time: Date.now(),
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
     if (!order || successPay) {
       dispatch(getOrderDetails(orderId));
     }
   }, [dispatch, order, orderId, successPay]);
 
-  return loading ? (
+  return loading || loadingPay ? (
     <Loader />
   ) : error ? (
     <Message variant='danger'>{error}</Message>
@@ -147,6 +179,15 @@ const OrderScreen = (props) => {
                   <Col>Total</Col>
                   <Col>${order.totalPrice}</Col>
                 </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                {!order.isPaid && (
+                  <Row>
+                    <Button onClick={() => navigate(`/order/${orderId}/pay`)}>
+                      Pay Now
+                    </Button>
+                  </Row>
+                )}
               </ListGroup.Item>
             </ListGroup>
           </Card>
