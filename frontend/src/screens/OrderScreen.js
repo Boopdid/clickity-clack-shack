@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { getOrderDetails, payOrder } from '../actions/orderActions';
+import { clearCart } from '../actions/cartActions';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const OrderScreen = (props) => {
@@ -61,6 +62,7 @@ const OrderScreen = (props) => {
           update_time: Date.now(),
         })
       );
+      dispatch(clearCart());
     }
   }, []);
 
