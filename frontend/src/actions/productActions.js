@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import {
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
@@ -9,15 +9,44 @@ import {
   PRODUCT_DETAILS_FAIL,
 } from '../constants/productConstants.js';
 
+let origin = window.location.origin;
+
+const client = new ApolloClient({
+  uri: `${origin}/graphql`,
+  cache: new InMemoryCache(),
+});
+
 export const listProducts = () => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
-    const { data } = await axios.get('/api/products');
+    const { data } = await client.query({
+      query: gql`
+        query {
+          products {
+            id
+            name
+            image
+            price
+            description
+            brand
+            category
+            rating
+            numReviews
+            countInStock
+            reviews {
+              name
+              rating
+              comment
+            }
+          }
+        }
+      `,
+    });
 
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
-      payload: data,
+      payload: data.products,
     });
   } catch (error) {
     dispatch({

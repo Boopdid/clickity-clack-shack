@@ -4,10 +4,12 @@ import colors from 'colors';
 import path from 'path';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
+import { graphqlHTTP } from 'express-graphql';
 
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import { schema, rootResolver } from './controllers/graphqlController.js';
 
 dotenv.config();
 
@@ -16,6 +18,14 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: schema,
+    rootValue: rootResolver,
+    graphiql: true,
+  })
+);
 
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
