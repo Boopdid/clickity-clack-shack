@@ -1,4 +1,3 @@
-import { Actions } from 'phaser';
 import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
